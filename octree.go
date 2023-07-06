@@ -30,3 +30,7 @@ func NewOctree(box *BoundingBox, maxCap, maxDeep int) *Octree {
 func (t *Octree) Collision(building *Building) bool {
 	return t.root.collision(building)
 }
+
+func (t *Octree) Root() *Node {
+	return t.root
+}

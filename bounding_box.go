@@ -16,42 +16,6 @@ func (b *BoundingBox) String() string {
 	return fmt.Sprintf("")
 }
 
-// AllPoints 获取实体上连线的所有点
-func (e *BoundingBox) AllPoints() []*Position {
-	//   Z  底部的点位置
-	//   2 ^------------. 3
-	//     |            |
-	//     |            |
-	//     |            |
-	//     '            '
-	//     |            |
-	//  0  '----------->' 1    X
-	//
-
-	//    Z  底部的点位置
-	//   6 ^------------. 7
-	//     |            |
-	//     |            |
-	//     |            |
-	//     '            '
-	//     |            |
-	//  4  '------------> 5  X
-	//
-	return []*Position{
-		// 下面四个点
-		&Position{X: e.position.X, Y: e.position.Y, Z: e.position.Z},
-		&Position{X: e.position.X + e.lengthX, Y: e.position.Y, Z: e.position.Z},
-		&Position{X: e.position.X, Y: e.position.Y, Z: e.position.Z + e.widthZ},
-		&Position{X: e.position.X + e.lengthX, Y: e.position.Y, Z: e.position.Z + e.widthZ},
-
-		// 上面四个点
-		&Position{X: e.position.X, Y: e.position.Y + e.heightY, Z: e.position.Z},
-		&Position{X: e.position.X + e.lengthX, Y: e.position.Y + e.heightY, Z: e.position.Z},
-		&Position{X: e.position.X, Y: e.position.Y + e.heightY, Z: e.position.Z + e.widthZ},
-		&Position{X: e.position.X + e.lengthX, Y: e.position.Y + e.heightY, Z: e.position.Z + e.widthZ},
-	}
-}
-
 // intersectWithPoint 判断某个点是否在盒子里
 func (b *BoundingBox) intersectWithPoint(position *Position) bool {
 	// 实体如果是一个点
@@ -87,6 +51,5 @@ func (b *BoundingBox) intersectWithBox(box *BoundingBox) bool {
 	if aMinZ > bMaxZ || aMaxZ < bMinZ {
 		return false
 	}
-
 	return true
 }
