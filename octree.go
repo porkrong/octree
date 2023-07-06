@@ -13,20 +13,20 @@ func NewOctree(box *BoundingBox, maxCap, maxDeep int) *Octree {
 		maxDeep: maxDeep,
 	}
 	root := &Node{
-		position: box.position,
+		leaf:     true,
 		parent:   nil,
 		children: [8]*Node{},
 		bounds:   box,
 		location: -1,
 		tree:     tree,
 	}
+	// 根节点需要自动分裂成八个节点
+	root.split()
 	tree.root = root
 	return tree
 }
 
-// Retrieve 传入一个盒子，检测当前是否有实体跟该盒子产生碰撞
-func (t *Octree) Retrieve(entity *Entity) {
-	for _, node := range t.root.children {
-
-	}
+// Collision 传入一个建筑，检测当前是否有建筑跟该建筑产生碰撞
+func (t *Octree) Collision(building *Building) bool {
+	return t.root.collision(building)
 }
