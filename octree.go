@@ -1,5 +1,10 @@
 package octree
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 // Octree 八叉树
 type Octree struct {
 	maxCap, maxDeep int
@@ -15,9 +20,9 @@ func NewOctree(box *BoundingBox, maxCap, maxDeep int) *Octree {
 	root := &Node{
 		leaf:     true,
 		parent:   nil,
-		children: [8]*Node{},
-		bounds:   box,
-		location: -1,
+		Children: make(map[int]*Node),
+		Bounds:   box,
+		Location: -1,
 		tree:     tree,
 	}
 	// 根节点需要自动分裂成八个节点
@@ -33,4 +38,11 @@ func (t *Octree) Collision(building *Building) bool {
 
 func (t *Octree) Root() *Node {
 	return t.root
+}
+
+func (t *Octree) String() string {
+	b, err := json.MarshalIndent(t.root, "", "   ")
+	fmt.Println(err)
+	fmt.Println(t.root)
+	return string(b)
 }

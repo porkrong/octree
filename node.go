@@ -18,12 +18,12 @@ type Node struct {
 	deep int  // 深度
 	tree *Octree
 
-	parent    *Node        // 父节点
-	children  [8]*Node     // 子节点
-	bounds    *BoundingBox // 矩形的范围
-	location  int          // 父节点中的位置
-	entities  []*Entity    // 实体
-	buildings []*Building  // 建筑
+	parent    *Node         `json:"-"` // 父节点
+	Children  map[int]*Node // 子节点
+	Bounds    *BoundingBox  // 矩形的范围
+	Location  int           // 父节点中的位置
+	entities  []*Entity     // 实体
+	buildings []*Building   // 建筑
 }
 
 // NewNode 新建一个节点
@@ -34,9 +34,9 @@ func (n *Node) NewNode(bounds *BoundingBox, location int) *Node {
 		deep:     n.deep + 1,
 		tree:     n.tree,
 		parent:   n,
-		children: [8]*Node{},
-		bounds:   bounds,
-		location: location,
+		Children: make(map[int]*Node),
+		Bounds:   bounds,
+		Location: location,
 		entities: []*Entity{},
 	}
 }
@@ -56,7 +56,7 @@ func (n *Node) AddEntity(entity *Entity) {
 
 	// 非叶子节点往下递归
 	// 找到对应的区域进行添加
-	for _, children := range n.children {
+	for _, children := range n.Children {
 		//检测是否在该节点范围内
 		if !children.intersectWithEntity(entity) {
 			continue
@@ -86,7 +86,7 @@ func (n *Node) AddBuilding(building *Building) {
 	}
 	// 非叶子节点往下递归
 	// 找到对应的区域进行添加
-	for _, children := range n.children {
+	for _, children := range n.Children {
 		//检测是否在该节点范围内
 		if !children.intersectWithBuilding(building) {
 			continue
@@ -104,7 +104,7 @@ func (n *Node) needCut() bool {
 
 // canCut 检查节点是否可以分割
 func (n *Node) canCut() bool {
-	if n.bounds.lengthX >= 2 && n.bounds.widthZ >= 2 && n.bounds.heightY >= 2 {
+	if n.Bounds.LengthX >= 2 && n.Bounds.WidthZ >= 2 && n.Bounds.HeightY >= 2 {
 		return true
 	}
 	return false
@@ -120,67 +120,67 @@ func (n *Node) split() {
 	if !n.leaf {
 		return
 	}
-	halfLengthX := int(math.Floor(float64(n.bounds.lengthX) / 2))
-	halfWidthZ := int(math.Floor(float64(n.bounds.widthZ) / 2))
-	halfHeightY := int(math.Floor(float64(n.bounds.heightY) / 2))
+	halfLengthX := int(math.Floor(float64(n.Bounds.LengthX) / 2))
+	halfWidthZ := int(math.Floor(float64(n.Bounds.WidthZ) / 2))
+	halfHeightY := int(math.Floor(float64(n.Bounds.HeightY) / 2))
 	//下面的格子
-	n.children[bottomOne] = n.NewNode(&BoundingBox{
-		position: &Position{X: n.bounds.position.X + halfLengthX, Y: n.bounds.position.Y, Z: n.bounds.position.Z + halfWidthZ},
-		lengthX:  n.bounds.lengthX - halfLengthX,
-		widthZ:   n.bounds.widthZ - halfWidthZ,
-		heightY:  halfHeightY,
+	n.Children[bottomOne] = n.NewNode(&BoundingBox{
+		Position: &Position{X: n.Bounds.Position.X + halfLengthX, Y: n.Bounds.Position.Y, Z: n.Bounds.Position.Z + halfWidthZ},
+		LengthX:  n.Bounds.LengthX - halfLengthX,
+		WidthZ:   n.Bounds.WidthZ - halfWidthZ,
+		HeightY:  halfHeightY,
 	}, bottomOne)
-	n.children[bottomTwo] = n.NewNode(&BoundingBox{
-		position: &Position{X: n.bounds.position.X, Y: n.bounds.position.Y, Z: n.bounds.position.Z + halfWidthZ},
-		lengthX:  halfLengthX,
-		widthZ:   n.bounds.widthZ - halfWidthZ,
-		heightY:  halfHeightY,
+	n.Children[bottomTwo] = n.NewNode(&BoundingBox{
+		Position: &Position{X: n.Bounds.Position.X, Y: n.Bounds.Position.Y, Z: n.Bounds.Position.Z + halfWidthZ},
+		LengthX:  halfLengthX,
+		WidthZ:   n.Bounds.WidthZ - halfWidthZ,
+		HeightY:  halfHeightY,
 	}, bottomTwo)
-	n.children[bottomThree] = n.NewNode(&BoundingBox{
-		position: &Position{X: n.bounds.position.X, Y: n.bounds.position.Y, Z: n.bounds.position.Z},
-		lengthX:  halfLengthX,
-		widthZ:   halfWidthZ,
-		heightY:  halfHeightY,
+	n.Children[bottomThree] = n.NewNode(&BoundingBox{
+		Position: &Position{X: n.Bounds.Position.X, Y: n.Bounds.Position.Y, Z: n.Bounds.Position.Z},
+		LengthX:  halfLengthX,
+		WidthZ:   halfWidthZ,
+		HeightY:  halfHeightY,
 	}, bottomThree)
 
-	n.children[bottomFour] = n.NewNode(&BoundingBox{
-		position: &Position{X: n.bounds.position.X + halfLengthX, Y: n.bounds.position.Y, Z: n.bounds.position.Z},
-		lengthX:  n.bounds.lengthX - halfLengthX,
-		widthZ:   halfWidthZ,
-		heightY:  halfHeightY,
+	n.Children[bottomFour] = n.NewNode(&BoundingBox{
+		Position: &Position{X: n.Bounds.Position.X + halfLengthX, Y: n.Bounds.Position.Y, Z: n.Bounds.Position.Z},
+		LengthX:  n.Bounds.LengthX - halfLengthX,
+		WidthZ:   halfWidthZ,
+		HeightY:  halfHeightY,
 	}, bottomFour)
 
 	// 上面的格子
-	n.children[topOne] = n.NewNode(&BoundingBox{
-		position: &Position{X: n.bounds.position.X + halfLengthX, Y: n.bounds.position.Y + halfHeightY, Z: n.bounds.position.Z + halfWidthZ},
-		lengthX:  n.bounds.lengthX - halfLengthX,
-		widthZ:   n.bounds.widthZ - halfWidthZ,
-		heightY:  n.bounds.heightY - halfHeightY,
+	n.Children[topOne] = n.NewNode(&BoundingBox{
+		Position: &Position{X: n.Bounds.Position.X + halfLengthX, Y: n.Bounds.Position.Y + halfHeightY, Z: n.Bounds.Position.Z + halfWidthZ},
+		LengthX:  n.Bounds.LengthX - halfLengthX,
+		WidthZ:   n.Bounds.WidthZ - halfWidthZ,
+		HeightY:  n.Bounds.HeightY - halfHeightY,
 	}, topOne)
-	n.children[topTwo] = n.NewNode(&BoundingBox{
-		position: &Position{X: n.bounds.position.X, Y: n.bounds.position.Y + halfHeightY, Z: n.bounds.position.Z + halfWidthZ},
-		lengthX:  halfLengthX,
-		widthZ:   n.bounds.widthZ - halfWidthZ,
-		heightY:  n.bounds.heightY - halfHeightY,
+	n.Children[topTwo] = n.NewNode(&BoundingBox{
+		Position: &Position{X: n.Bounds.Position.X, Y: n.Bounds.Position.Y + halfHeightY, Z: n.Bounds.Position.Z + halfWidthZ},
+		LengthX:  halfLengthX,
+		WidthZ:   n.Bounds.WidthZ - halfWidthZ,
+		HeightY:  n.Bounds.HeightY - halfHeightY,
 	}, topTwo)
-	n.children[topThree] = n.NewNode(&BoundingBox{
-		position: &Position{X: n.bounds.position.X, Y: n.bounds.position.Y + halfHeightY, Z: n.bounds.position.Z},
-		lengthX:  halfLengthX,
-		widthZ:   halfWidthZ,
-		heightY:  n.bounds.heightY - halfHeightY,
+	n.Children[topThree] = n.NewNode(&BoundingBox{
+		Position: &Position{X: n.Bounds.Position.X, Y: n.Bounds.Position.Y + halfHeightY, Z: n.Bounds.Position.Z},
+		LengthX:  halfLengthX,
+		WidthZ:   halfWidthZ,
+		HeightY:  n.Bounds.HeightY - halfHeightY,
 	}, topThree)
 
-	n.children[topFour] = n.NewNode(&BoundingBox{
-		position: &Position{X: n.bounds.position.X + halfLengthX, Y: n.bounds.position.Y + halfHeightY, Z: n.bounds.position.Z},
-		lengthX:  n.bounds.lengthX - halfLengthX,
-		widthZ:   halfWidthZ,
-		heightY:  n.bounds.heightY - halfHeightY,
+	n.Children[topFour] = n.NewNode(&BoundingBox{
+		Position: &Position{X: n.Bounds.Position.X + halfLengthX, Y: n.Bounds.Position.Y + halfHeightY, Z: n.Bounds.Position.Z},
+		LengthX:  n.Bounds.LengthX - halfLengthX,
+		WidthZ:   halfWidthZ,
+		HeightY:  n.Bounds.HeightY - halfHeightY,
 	}, topFour)
 
 	// 将当前节点上的建筑转移到子节点上
 	for _, building := range n.buildings {
-		for _, node := range n.children {
-			if node.bounds.intersectWithBox(building.bounds) {
+		for _, node := range n.Children {
+			if node.Bounds.intersectWithBox(building.bounds) {
 				// 对当前实体在该子节点中
 				node.AddBuilding(building)
 				break
@@ -210,7 +210,7 @@ func (n *Node) collision(building *Building) bool {
 		return false
 	}
 
-	for _, node := range n.children {
+	for _, node := range n.Children {
 		//接着递归检测碰撞
 		if node.collision(building) {
 			// 检测到碰撞的情况。直接返回
@@ -222,10 +222,10 @@ func (n *Node) collision(building *Building) bool {
 
 // 判断实体是否在节点范围内
 func (n *Node) intersectWithEntity(entity *Entity) bool {
-	return n.bounds.intersectWithPoint(entity.position)
+	return n.Bounds.intersectWithPoint(entity.position)
 }
 
 // intersectWithBuilding 判断建筑是否在节点范围内
 func (n *Node) intersectWithBuilding(building *Building) bool {
-	return n.bounds.intersectWithBox(building.bounds)
+	return n.Bounds.intersectWithBox(building.bounds)
 }

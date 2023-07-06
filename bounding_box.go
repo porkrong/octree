@@ -5,10 +5,10 @@ import (
 )
 
 type BoundingBox struct {
-	position *Position
-	lengthX  int // 长 X
-	widthZ   int // 宽 Z
-	heightY  int // 高 Y
+	Position *Position
+	LengthX  int // 长 X
+	WidthZ   int // 宽 Z
+	HeightY  int // 高 Y
 }
 
 func (b *BoundingBox) String() string {
@@ -19,28 +19,28 @@ func (b *BoundingBox) String() string {
 // intersectWithPoint 判断某个点是否在盒子里
 func (b *BoundingBox) intersectWithPoint(position *Position) bool {
 	// 实体如果是一个点
-	if b.position.X <= position.X && position.X < b.position.X+b.lengthX &&
-		b.position.Y <= position.Y && position.Y < b.position.Y+b.heightY &&
-		b.position.Z <= position.Z && position.Z < b.position.Z+b.widthZ {
+	if b.Position.X <= position.X && position.X < b.Position.X+b.LengthX &&
+		b.Position.Y <= position.Y && position.Y < b.Position.Y+b.HeightY &&
+		b.Position.Z <= position.Z && position.Z < b.Position.Z+b.WidthZ {
 		return true
 	}
 	return false
 }
 
 func (b *BoundingBox) intersectWithBox(box *BoundingBox) bool {
-	aMinX := b.position.X
-	aMaxX := b.position.X + b.lengthX
-	aMinY := b.position.Y
-	aMaxY := b.position.Y + b.heightY
-	aMinZ := b.position.Z
-	aMaxZ := b.position.Z + b.widthZ
+	aMinX := b.Position.X
+	aMaxX := b.Position.X + b.LengthX
+	aMinY := b.Position.Y
+	aMaxY := b.Position.Y + b.HeightY
+	aMinZ := b.Position.Z
+	aMaxZ := b.Position.Z + b.WidthZ
 
-	bMinX := box.position.X
-	bMaxX := box.position.X + box.lengthX
-	bMinY := box.position.Y
-	bMaxY := box.position.Y + box.heightY
-	bMinZ := box.position.Z
-	bMaxZ := box.position.Z + box.widthZ
+	bMinX := box.Position.X
+	bMaxX := box.Position.X + box.LengthX
+	bMinY := box.Position.Y
+	bMaxY := box.Position.Y + box.HeightY
+	bMinZ := box.Position.Z
+	bMaxZ := box.Position.Z + box.WidthZ
 	// 如果两个长方体在某个坐标轴上的投影没有重叠，那么这两个长方体就不可能相交
 	if aMinX > bMaxX || aMaxX < bMinX {
 		return false
