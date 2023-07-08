@@ -1,6 +1,13 @@
 package octree
 
-import "math"
+import (
+	"fmt"
+	"github.com/go-echarts/go-echarts/v2/charts"
+	"github.com/go-echarts/go-echarts/v2/opts"
+	"math"
+	"math/rand"
+	"time"
+)
 
 const (
 	bottomOne = 0 + iota
@@ -14,30 +21,31 @@ const (
 )
 
 type Node struct {
-	leaf bool // 是否为叶子节点
-	deep int  // 深度
-	tree *Octree
+	leaf     bool // 是否为叶子节点
+	tree     *Octree
+	Deep     int           // 深度
+	Location int           // 父节点中的位置
+	parent   *Node         `json:"-"` // 父节点
+	Children map[int]*Node // 子节点
+	Bounds   *Vector3d     // 矩形的范围
 
-	parent    *Node         `json:"-"` // 父节点
-	Children  map[int]*Node // 子节点
-	Bounds    *BoundingBox  // 矩形的范围
-	Location  int           // 父节点中的位置
-	entities  []*Entity     // 实体
-	buildings []*Building   // 建筑
+	Entities  []*Entity   // 实体
+	Buildings []*Building // 建筑
 }
 
 // NewNode 新建一个节点
-func (n *Node) NewNode(bounds *BoundingBox, location int) *Node {
+func (n *Node) NewNode(bounds *Vector3d, location int) *Node {
 
 	return &Node{
-		leaf:     true,
-		deep:     n.deep + 1,
+		leaf: true,
+
+		Deep:     n.Deep + 1,
 		tree:     n.tree,
 		parent:   n,
 		Children: make(map[int]*Node),
 		Bounds:   bounds,
 		Location: location,
-		entities: []*Entity{},
+		Entities: []*Entity{},
 	}
 }
 
@@ -47,10 +55,10 @@ func (n *Node) AddEntity(entity *Entity) {
 	if n.leaf && n.needCut() {
 		n.split()
 	}
-
+	//fmt.Println("n.Bounds:", n.Bounds)
 	if n.leaf {
 		// 直接添加一个实体
-		n.entities = append(n.entities, entity)
+		n.Entities = append(n.Entities, entity)
 		return
 	}
 
@@ -81,7 +89,7 @@ func (n *Node) DeleteEntity(entity *Entity) {
 func (n *Node) AddBuilding(building *Building) {
 	if n.leaf {
 		// 直接添加一个建筑
-		n.buildings = append(n.buildings, building)
+		n.Buildings = append(n.Buildings, building)
 		return
 	}
 	// 非叶子节点往下递归
@@ -99,7 +107,7 @@ func (n *Node) AddBuilding(building *Building) {
 
 // 检测节点是否需要进行拆分
 func (n *Node) needCut() bool {
-	return len(n.entities)+1 > n.tree.maxCap && n.deep+1 <= n.tree.maxDeep && n.canCut()
+	return len(n.Entities)+1 > n.tree.MaxCap && n.Deep+1 <= n.tree.MaxDeep && n.canCut()
 }
 
 // canCut 检查节点是否可以分割
@@ -124,26 +132,26 @@ func (n *Node) split() {
 	halfWidthZ := int(math.Floor(float64(n.Bounds.WidthZ) / 2))
 	halfHeightY := int(math.Floor(float64(n.Bounds.HeightY) / 2))
 	//下面的格子
-	n.Children[bottomOne] = n.NewNode(&BoundingBox{
+	n.Children[bottomOne] = n.NewNode(&Vector3d{
 		Position: &Position{X: n.Bounds.Position.X + halfLengthX, Y: n.Bounds.Position.Y, Z: n.Bounds.Position.Z + halfWidthZ},
 		LengthX:  n.Bounds.LengthX - halfLengthX,
 		WidthZ:   n.Bounds.WidthZ - halfWidthZ,
 		HeightY:  halfHeightY,
 	}, bottomOne)
-	n.Children[bottomTwo] = n.NewNode(&BoundingBox{
+	n.Children[bottomTwo] = n.NewNode(&Vector3d{
 		Position: &Position{X: n.Bounds.Position.X, Y: n.Bounds.Position.Y, Z: n.Bounds.Position.Z + halfWidthZ},
 		LengthX:  halfLengthX,
 		WidthZ:   n.Bounds.WidthZ - halfWidthZ,
 		HeightY:  halfHeightY,
 	}, bottomTwo)
-	n.Children[bottomThree] = n.NewNode(&BoundingBox{
+	n.Children[bottomThree] = n.NewNode(&Vector3d{
 		Position: &Position{X: n.Bounds.Position.X, Y: n.Bounds.Position.Y, Z: n.Bounds.Position.Z},
 		LengthX:  halfLengthX,
 		WidthZ:   halfWidthZ,
 		HeightY:  halfHeightY,
 	}, bottomThree)
 
-	n.Children[bottomFour] = n.NewNode(&BoundingBox{
+	n.Children[bottomFour] = n.NewNode(&Vector3d{
 		Position: &Position{X: n.Bounds.Position.X + halfLengthX, Y: n.Bounds.Position.Y, Z: n.Bounds.Position.Z},
 		LengthX:  n.Bounds.LengthX - halfLengthX,
 		WidthZ:   halfWidthZ,
@@ -151,26 +159,26 @@ func (n *Node) split() {
 	}, bottomFour)
 
 	// 上面的格子
-	n.Children[topOne] = n.NewNode(&BoundingBox{
+	n.Children[topOne] = n.NewNode(&Vector3d{
 		Position: &Position{X: n.Bounds.Position.X + halfLengthX, Y: n.Bounds.Position.Y + halfHeightY, Z: n.Bounds.Position.Z + halfWidthZ},
 		LengthX:  n.Bounds.LengthX - halfLengthX,
 		WidthZ:   n.Bounds.WidthZ - halfWidthZ,
 		HeightY:  n.Bounds.HeightY - halfHeightY,
 	}, topOne)
-	n.Children[topTwo] = n.NewNode(&BoundingBox{
+	n.Children[topTwo] = n.NewNode(&Vector3d{
 		Position: &Position{X: n.Bounds.Position.X, Y: n.Bounds.Position.Y + halfHeightY, Z: n.Bounds.Position.Z + halfWidthZ},
 		LengthX:  halfLengthX,
 		WidthZ:   n.Bounds.WidthZ - halfWidthZ,
 		HeightY:  n.Bounds.HeightY - halfHeightY,
 	}, topTwo)
-	n.Children[topThree] = n.NewNode(&BoundingBox{
+	n.Children[topThree] = n.NewNode(&Vector3d{
 		Position: &Position{X: n.Bounds.Position.X, Y: n.Bounds.Position.Y + halfHeightY, Z: n.Bounds.Position.Z},
 		LengthX:  halfLengthX,
 		WidthZ:   halfWidthZ,
 		HeightY:  n.Bounds.HeightY - halfHeightY,
 	}, topThree)
 
-	n.Children[topFour] = n.NewNode(&BoundingBox{
+	n.Children[topFour] = n.NewNode(&Vector3d{
 		Position: &Position{X: n.Bounds.Position.X + halfLengthX, Y: n.Bounds.Position.Y + halfHeightY, Z: n.Bounds.Position.Z},
 		LengthX:  n.Bounds.LengthX - halfLengthX,
 		WidthZ:   halfWidthZ,
@@ -178,9 +186,9 @@ func (n *Node) split() {
 	}, topFour)
 
 	// 将当前节点上的建筑转移到子节点上
-	for _, building := range n.buildings {
+	for _, building := range n.Buildings {
 		for _, node := range n.Children {
-			if node.Bounds.intersectWithBox(building.bounds) {
+			if node.Bounds.intersectWithBox(building.Bounds) {
 				// 对当前实体在该子节点中
 				node.AddBuilding(building)
 				break
@@ -202,8 +210,8 @@ func (n *Node) collision(building *Building) bool {
 	if n.leaf {
 		// 如果是叶子节点
 		// 检测叶子节点内的建筑是否与该建筑产生碰撞
-		for _, b := range n.buildings {
-			if b.bounds.intersectWithBox(building.bounds) {
+		for _, b := range n.Buildings {
+			if b.Bounds.intersectWithBox(building.Bounds) {
 				return true
 			}
 		}
@@ -222,10 +230,111 @@ func (n *Node) collision(building *Building) bool {
 
 // 判断实体是否在节点范围内
 func (n *Node) intersectWithEntity(entity *Entity) bool {
-	return n.Bounds.intersectWithPoint(entity.position)
+	return n.Bounds.intersectWithPoint(entity.Position)
 }
 
 // intersectWithBuilding 判断建筑是否在节点范围内
 func (n *Node) intersectWithBuilding(building *Building) bool {
-	return n.Bounds.intersectWithBox(building.bounds)
+	return n.Bounds.intersectWithBox(building.Bounds)
+}
+
+func (n *Node) ExportEntity(surface3D *charts.Surface3D) {
+	var list []opts.Chart3DData
+	if n.leaf {
+		for _, v := range n.Entities {
+			list = append(list, opts.Chart3DData{Value: []interface{}{
+				v.Position.X, v.Position.Y, v.Position.Z},
+				ItemStyle: &opts.ItemStyle{
+					// 实体的点为黑色
+					Color: "#000",
+				},
+			})
+
+		}
+
+		if len(list) == 0 {
+			return
+		}
+		fmt.Println("entity:", list)
+		surface3D.AddSeries("entity", list)
+		return
+	}
+	for _, children := range n.Children {
+		children.ExportEntity(surface3D)
+	}
+	return
+}
+
+func (n *Node) Export(surface3D *charts.Surface3D, key string) {
+	color := "#53fc19" // 节点的点为绿色
+	if n.parent == nil {
+		//surface3D.AddSeries(key, n.Bounds.cuboid(color))
+		surface3D.MultiSeries = append(surface3D.MultiSeries, charts.SingleSeries{
+			Name: key,
+			Type: surface3D.Type(),
+			Data: n.Bounds.cuboid(color),
+			//CoordSystem: types.ChartCartesian3D,
+		})
+	}
+	for i := 0; i < 8; i++ {
+		children, ok := n.Children[i]
+		if !ok {
+			continue
+		}
+		//surface3D.AddSeries(fmt.Sprintf("%v-%v", key, children.Location), children.Bounds.cuboid(color))
+		surface3D.MultiSeries = append(surface3D.MultiSeries, charts.SingleSeries{
+			Name: fmt.Sprintf("%v-%v", key, children.Location),
+			Type: surface3D.Type(),
+			Data: children.Bounds.cuboid(color),
+			//CoordSystem: types.ChartCartesian3D,
+		})
+	}
+	for _, children := range n.Children {
+		children.Export(surface3D, fmt.Sprintf("%v-%v", key, children.Location))
+	}
+	return
+}
+
+func (n *Node) ExportBuilding(surface3D *charts.Surface3D) {
+	fmt.Println(n.leaf)
+	fmt.Println(n.Children)
+	fmt.Println(n.Buildings)
+	if n.leaf {
+		for _, building := range n.Buildings {
+			fmt.Println(building)
+			time.Sleep(time.Millisecond * 10)
+			list := building.Bounds.cuboid("#53fc19")
+			//list := building.Bounds.cuboid(RandColor())
+			if len(list) == 0 {
+				continue
+			}
+			//surface3D.AddSeries(
+			//	fmt.Sprintf("building:%v", building.Key),
+			//	list,
+			//)
+			surface3D.MultiSeries = append(surface3D.MultiSeries, charts.SingleSeries{
+				Name: fmt.Sprintf("building:%v", building.Key),
+				Type: surface3D.Type(),
+				Data: list,
+				//CoordSystem: types.ChartCartesian3D,
+			})
+		}
+
+		return
+	}
+	for _, children := range n.Children {
+		children.ExportBuilding(surface3D)
+	}
+	return
+}
+
+func RandColor() string {
+	rand.Seed(time.Now().UnixNano())
+
+	red := rand.Intn(256)
+	green := rand.Intn(256)
+	blue := rand.Intn(256)
+
+	color := fmt.Sprintf("#%02X%02X%02X", red, green, blue)
+	return color
 }

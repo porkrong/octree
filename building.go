@@ -1,6 +1,6 @@
 package octree
 
 type Building struct {
-	bounds *BoundingBox
+	Bounds *Vector3d
 	Key    string
 }

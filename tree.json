@@ -1,0 +1,642 @@
+{
+   "MaxCap": 2,
+   "MaxDeep": 4,
+   "Length": 100,
+   "Width": 200,
+   "Height": 300,
+   "Root": {
+      "Deep": 0,
+      "Location": -1,
+      "Children": {
+         "0": {
+            "Deep": 1,
+            "Location": 0,
+            "Children": {},
+            "Bounds": {
+               "Position": {
+                  "X": 50,
+                  "Y": 0,
+                  "Z": 100
+               },
+               "LengthX": 50,
+               "WidthZ": 100,
+               "HeightY": 150
+            },
+            "Entities": [
+               {
+                  "Position": {
+                     "X": 84,
+                     "Y": 82,
+                     "Z": 112
+                  },
+                  "Key": "2"
+               }
+            ],
+            "Buildings": [
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 47,
+                        "Y": 53,
+                        "Z": 108
+                     },
+                     "LengthX": 8,
+                     "WidthZ": 8,
+                     "HeightY": 8
+                  },
+                  "Key": "1"
+               },
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 98,
+                        "Y": 140,
+                        "Z": 125
+                     },
+                     "LengthX": 50,
+                     "WidthZ": 50,
+                     "HeightY": 50
+                  },
+                  "Key": "3"
+               },
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 96,
+                        "Y": 54,
+                        "Z": 186
+                     },
+                     "LengthX": 41,
+                     "WidthZ": 41,
+                     "HeightY": 41
+                  },
+                  "Key": "4"
+               },
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 46,
+                        "Y": 47,
+                        "Z": 199
+                     },
+                     "LengthX": 14,
+                     "WidthZ": 14,
+                     "HeightY": 14
+                  },
+                  "Key": "10"
+               }
+            ]
+         },
+         "1": {
+            "Deep": 1,
+            "Location": 1,
+            "Children": {},
+            "Bounds": {
+               "Position": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 100
+               },
+               "LengthX": 50,
+               "WidthZ": 100,
+               "HeightY": 150
+            },
+            "Entities": [],
+            "Buildings": [
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 47,
+                        "Y": 53,
+                        "Z": 108
+                     },
+                     "LengthX": 8,
+                     "WidthZ": 8,
+                     "HeightY": 8
+                  },
+                  "Key": "1"
+               },
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 46,
+                        "Y": 47,
+                        "Z": 199
+                     },
+                     "LengthX": 14,
+                     "WidthZ": 14,
+                     "HeightY": 14
+                  },
+                  "Key": "10"
+               }
+            ]
+         },
+         "2": {
+            "Deep": 1,
+            "Location": 2,
+            "Children": {},
+            "Bounds": {
+               "Position": {
+                  "X": 0,
+                  "Y": 0,
+                  "Z": 0
+               },
+               "LengthX": 50,
+               "WidthZ": 100,
+               "HeightY": 150
+            },
+            "Entities": [
+               {
+                  "Position": {
+                     "X": 22,
+                     "Y": 28,
+                     "Z": 0
+                  },
+                  "Key": "6"
+               }
+            ],
+            "Buildings": [
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 26,
+                        "Y": 82,
+                        "Z": 61
+                     },
+                     "LengthX": 28,
+                     "WidthZ": 28,
+                     "HeightY": 28
+                  },
+                  "Key": "6"
+               }
+            ]
+         },
+         "3": {
+            "Deep": 1,
+            "Location": 3,
+            "Children": {},
+            "Bounds": {
+               "Position": {
+                  "X": 50,
+                  "Y": 0,
+                  "Z": 0
+               },
+               "LengthX": 50,
+               "WidthZ": 100,
+               "HeightY": 150
+            },
+            "Entities": [
+               {
+                  "Position": {
+                     "X": 56,
+                     "Y": 46,
+                     "Z": 29
+                  },
+                  "Key": "3"
+               },
+               {
+                  "Position": {
+                     "X": 95,
+                     "Y": 104,
+                     "Z": 88
+                  },
+                  "Key": "10"
+               }
+            ],
+            "Buildings": [
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 26,
+                        "Y": 82,
+                        "Z": 61
+                     },
+                     "LengthX": 28,
+                     "WidthZ": 28,
+                     "HeightY": 28
+                  },
+                  "Key": "6"
+               }
+            ]
+         },
+         "4": {
+            "Deep": 1,
+            "Location": 4,
+            "Children": {},
+            "Bounds": {
+               "Position": {
+                  "X": 50,
+                  "Y": 150,
+                  "Z": 100
+               },
+               "LengthX": 50,
+               "WidthZ": 100,
+               "HeightY": 150
+            },
+            "Entities": [],
+            "Buildings": [
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 98,
+                        "Y": 140,
+                        "Z": 125
+                     },
+                     "LengthX": 50,
+                     "WidthZ": 50,
+                     "HeightY": 50
+                  },
+                  "Key": "3"
+               },
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 40,
+                        "Y": 269,
+                        "Z": 83
+                     },
+                     "LengthX": 18,
+                     "WidthZ": 18,
+                     "HeightY": 18
+                  },
+                  "Key": "5"
+               },
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 92,
+                        "Y": 198,
+                        "Z": 165
+                     },
+                     "LengthX": 33,
+                     "WidthZ": 33,
+                     "HeightY": 33
+                  },
+                  "Key": "7"
+               }
+            ]
+         },
+         "5": {
+            "Deep": 1,
+            "Location": 5,
+            "Children": {},
+            "Bounds": {
+               "Position": {
+                  "X": 0,
+                  "Y": 150,
+                  "Z": 100
+               },
+               "LengthX": 50,
+               "WidthZ": 100,
+               "HeightY": 150
+            },
+            "Entities": [
+               {
+                  "Position": {
+                     "X": 20,
+                     "Y": 202,
+                     "Z": 131
+                  },
+                  "Key": "7"
+               },
+               {
+                  "Position": {
+                     "X": 21,
+                     "Y": 281,
+                     "Z": 109
+                  },
+                  "Key": "8"
+               }
+            ],
+            "Buildings": [
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 7,
+                        "Y": 198,
+                        "Z": 88
+                     },
+                     "LengthX": 16,
+                     "WidthZ": 16,
+                     "HeightY": 16
+                  },
+                  "Key": "2"
+               },
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 40,
+                        "Y": 269,
+                        "Z": 83
+                     },
+                     "LengthX": 18,
+                     "WidthZ": 18,
+                     "HeightY": 18
+                  },
+                  "Key": "5"
+               }
+            ]
+         },
+         "6": {
+            "Deep": 1,
+            "Location": 6,
+            "Children": {},
+            "Bounds": {
+               "Position": {
+                  "X": 0,
+                  "Y": 150,
+                  "Z": 0
+               },
+               "LengthX": 50,
+               "WidthZ": 100,
+               "HeightY": 150
+            },
+            "Entities": [],
+            "Buildings": [
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 7,
+                        "Y": 198,
+                        "Z": 88
+                     },
+                     "LengthX": 16,
+                     "WidthZ": 16,
+                     "HeightY": 16
+                  },
+                  "Key": "2"
+               },
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 40,
+                        "Y": 269,
+                        "Z": 83
+                     },
+                     "LengthX": 18,
+                     "WidthZ": 18,
+                     "HeightY": 18
+                  },
+                  "Key": "5"
+               },
+               {
+                  "Bounds": {
+                     "Position": {
+                        "X": 47,
+                        "Y": 247,
+                        "Z": 23
+                     },
+                     "LengthX": 20,
+                     "WidthZ": 20,
+                     "HeightY": 20
+                  },
+                  "Key": "8"
+               }
+            ]
+         },
+         "7": {
+            "Deep": 1,
+            "Location": 7,
+            "Children": {
+               "0": {
+                  "Deep": 2,
+                  "Location": 0,
+                  "Children": {},
+                  "Bounds": {
+                     "Position": {
+                        "X": 75,
+                        "Y": 150,
+                        "Z": 50
+                     },
+                     "LengthX": 25,
+                     "WidthZ": 50,
+                     "HeightY": 75
+                  },
+                  "Entities": [],
+                  "Buildings": [
+                     {
+                        "Bounds": {
+                           "Position": {
+                              "X": 91,
+                              "Y": 175,
+                              "Z": 56
+                           },
+                           "LengthX": 41,
+                           "WidthZ": 41,
+                           "HeightY": 41
+                        },
+                        "Key": "9"
+                     }
+                  ]
+               },
+               "1": {
+                  "Deep": 2,
+                  "Location": 1,
+                  "Children": {},
+                  "Bounds": {
+                     "Position": {
+                        "X": 50,
+                        "Y": 150,
+                        "Z": 50
+                     },
+                     "LengthX": 25,
+                     "WidthZ": 50,
+                     "HeightY": 75
+                  },
+                  "Entities": [
+                     {
+                        "Position": {
+                           "X": 73,
+                           "Y": 152,
+                           "Z": 72
+                        },
+                        "Key": "5"
+                     }
+                  ],
+                  "Buildings": null
+               },
+               "2": {
+                  "Deep": 2,
+                  "Location": 2,
+                  "Children": {},
+                  "Bounds": {
+                     "Position": {
+                        "X": 50,
+                        "Y": 150,
+                        "Z": 0
+                     },
+                     "LengthX": 25,
+                     "WidthZ": 50,
+                     "HeightY": 75
+                  },
+                  "Entities": [],
+                  "Buildings": null
+               },
+               "3": {
+                  "Deep": 2,
+                  "Location": 3,
+                  "Children": {},
+                  "Bounds": {
+                     "Position": {
+                        "X": 75,
+                        "Y": 150,
+                        "Z": 0
+                     },
+                     "LengthX": 25,
+                     "WidthZ": 50,
+                     "HeightY": 75
+                  },
+                  "Entities": [],
+                  "Buildings": null
+               },
+               "4": {
+                  "Deep": 2,
+                  "Location": 4,
+                  "Children": {},
+                  "Bounds": {
+                     "Position": {
+                        "X": 75,
+                        "Y": 225,
+                        "Z": 50
+                     },
+                     "LengthX": 25,
+                     "WidthZ": 50,
+                     "HeightY": 75
+                  },
+                  "Entities": [],
+                  "Buildings": null
+               },
+               "5": {
+                  "Deep": 2,
+                  "Location": 5,
+                  "Children": {},
+                  "Bounds": {
+                     "Position": {
+                        "X": 50,
+                        "Y": 225,
+                        "Z": 50
+                     },
+                     "LengthX": 25,
+                     "WidthZ": 50,
+                     "HeightY": 75
+                  },
+                  "Entities": [
+                     {
+                        "Position": {
+                           "X": 57,
+                           "Y": 241,
+                           "Z": 69
+                        },
+                        "Key": "9"
+                     }
+                  ],
+                  "Buildings": [
+                     {
+                        "Bounds": {
+                           "Position": {
+                              "X": 40,
+                              "Y": 269,
+                              "Z": 83
+                           },
+                           "LengthX": 18,
+                           "WidthZ": 18,
+                           "HeightY": 18
+                        },
+                        "Key": "5"
+                     }
+                  ]
+               },
+               "6": {
+                  "Deep": 2,
+                  "Location": 6,
+                  "Children": {},
+                  "Bounds": {
+                     "Position": {
+                        "X": 50,
+                        "Y": 225,
+                        "Z": 0
+                     },
+                     "LengthX": 25,
+                     "WidthZ": 50,
+                     "HeightY": 75
+                  },
+                  "Entities": [],
+                  "Buildings": [
+                     {
+                        "Bounds": {
+                           "Position": {
+                              "X": 47,
+                              "Y": 247,
+                              "Z": 23
+                           },
+                           "LengthX": 20,
+                           "WidthZ": 20,
+                           "HeightY": 20
+                        },
+                        "Key": "8"
+                     }
+                  ]
+               },
+               "7": {
+                  "Deep": 2,
+                  "Location": 7,
+                  "Children": {},
+                  "Bounds": {
+                     "Position": {
+                        "X": 75,
+                        "Y": 225,
+                        "Z": 0
+                     },
+                     "LengthX": 25,
+                     "WidthZ": 50,
+                     "HeightY": 75
+                  },
+                  "Entities": [],
+                  "Buildings": null
+               }
+            },
+            "Bounds": {
+               "Position": {
+                  "X": 50,
+                  "Y": 150,
+                  "Z": 0
+               },
+               "LengthX": 50,
+               "WidthZ": 100,
+               "HeightY": 150
+            },
+            "Entities": [
+               {
+                  "Position": {
+                     "X": 76,
+                     "Y": 199,
+                     "Z": 25
+                  },
+                  "Key": "1"
+               },
+               {
+                  "Position": {
+                     "X": 86,
+                     "Y": 191,
+                     "Z": 38
+                  },
+                  "Key": "4"
+               }
+            ],
+            "Buildings": null
+         }
+      },
+      "Bounds": {
+         "Position": {
+            "X": 0,
+            "Y": 0,
+            "Z": 0
+         },
+         "LengthX": 100,
+         "WidthZ": 200,
+         "HeightY": 300
+      },
+      "Entities": null,
+      "Buildings": null
+   }
+}

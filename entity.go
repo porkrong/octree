@@ -1,6 +1,6 @@
 package octree
 
 type Entity struct {
-	position *Position
+	Position *Position
 	Key      string
 }

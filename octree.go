@@ -2,20 +2,30 @@ package octree
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/go-echarts/go-echarts/v2/charts"
+	"github.com/go-echarts/go-echarts/v2/components"
+	"github.com/go-echarts/go-echarts/v2/opts"
+	"io"
+	"os"
 )
 
 // Octree 八叉树
 type Octree struct {
-	maxCap, maxDeep int
-	root            *Node
+	MaxCap, MaxDeep int
+	Length          int
+	Width           int
+	Height          int
+	Root            *Node
 }
 
 // NewOctree 构建一颗八叉树
-func NewOctree(box *BoundingBox, maxCap, maxDeep int) *Octree {
+func NewOctree(box *Vector3d, maxCap, maxDeep int) *Octree {
 	tree := &Octree{
-		maxCap:  maxCap,
-		maxDeep: maxDeep,
+		MaxCap:  maxCap,
+		MaxDeep: maxDeep,
+		Length:  box.LengthX,
+		Width:   box.WidthZ,
+		Height:  box.HeightY,
 	}
 	root := &Node{
 		leaf:     true,
@@ -27,22 +37,84 @@ func NewOctree(box *BoundingBox, maxCap, maxDeep int) *Octree {
 	}
 	// 根节点需要自动分裂成八个节点
 	root.split()
-	tree.root = root
+	tree.Root = root
 	return tree
 }
 
 // Collision 传入一个建筑，检测当前是否有建筑跟该建筑产生碰撞
 func (t *Octree) Collision(building *Building) bool {
-	return t.root.collision(building)
-}
-
-func (t *Octree) Root() *Node {
-	return t.root
+	return t.Root.collision(building)
 }
 
 func (t *Octree) String() string {
-	b, err := json.MarshalIndent(t.root, "", "   ")
-	fmt.Println(err)
-	fmt.Println(t.root)
+	b, _ := json.MarshalIndent(t, "", "   ")
 	return string(b)
+}
+
+// Export 导出整棵树
+func (t *Octree) Export() {
+	file, err := os.OpenFile("tree.json", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	_, err = file.WriteString(t.String())
+	if err != nil {
+		panic(err)
+	}
+	page := components.NewPage()
+
+	surface3D1 := charts.NewSurface3D()
+	surface3D1.SetGlobalOptions(
+		charts.WithTitleOpts(opts.Title{
+			Title: "",
+		}),
+	)
+
+	//t.Root.Export(surface3D, "root")
+	t.Root.ExportEntity(surface3D1)
+
+	surface3D2 := charts.NewSurface3D()
+	surface3D2.SetGlobalOptions(
+		charts.WithTitleOpts(opts.Title{
+			Title: "",
+		}),
+		charts.WithVisualMapOpts(opts.VisualMap{
+			Show:      false,
+			Dimension: "2",
+			Min:       -1,
+			Max:       1,
+			InRange: &opts.VisualMapInRange{
+				Color: []string{
+					"#313695",
+					"#4575b4",
+				},
+			},
+		}),
+		charts.WithXAxis3DOpts(opts.XAxis3D{
+			Type: "value",
+		}),
+		charts.WithYAxis3DOpts(opts.YAxis3D{
+			Type: "value",
+		}),
+		charts.WithZAxis3DOpts(opts.ZAxis3D{
+			Type: "value",
+		}),
+		charts.WithGrid3DOpts(opts.Grid3D{
+			ViewControl: &opts.ViewControl{
+				AutoRotate: true,
+			},
+		}),
+	)
+	t.Root.ExportBuilding(surface3D2)
+
+	page.AddCharts(
+		//surface3D1,
+		surface3D2,
+	)
+	f, err := os.Create("3d_grid.html")
+	if err != nil {
+		panic(err)
+	}
+	page.Render(io.MultiWriter(f))
 }
