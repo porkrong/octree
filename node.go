@@ -202,30 +202,31 @@ func (n *Node) split() {
 }
 
 // collision 检查当前节点内的建筑是否与该建筑产生碰撞
-func (n *Node) collision(building *Building) bool {
+func (n *Node) collision(building *Building) (result bool, collisionBuilding *Building) {
 	// 判断盒子是否与节点相交
 	if !n.intersectWithBuilding(building) {
-		return false
+		return false, nil
 	}
 	if n.leaf {
 		// 如果是叶子节点
 		// 检测叶子节点内的建筑是否与该建筑产生碰撞
 		for _, b := range n.Buildings {
 			if b.Bounds.intersectWithBox(building.Bounds) {
-				return true
+				return true, b
 			}
 		}
-		return false
+		return false, nil
 	}
 
 	for _, node := range n.Children {
 		//接着递归检测碰撞
-		if node.collision(building) {
+		result, collisionBuilding = node.collision(building)
+		if result {
 			// 检测到碰撞的情况。直接返回
-			return true
+			return result, collisionBuilding
 		}
 	}
-	return false
+	return false, nil
 }
 
 // 判断实体是否在节点范围内
@@ -255,7 +256,7 @@ func (n *Node) ExportEntity(surface3D *charts.Surface3D) {
 		if len(list) == 0 {
 			return
 		}
-		fmt.Println("entity:", list)
+		//fmt.Println("entity:", list)
 		surface3D.AddSeries("entity", list)
 		return
 	}
@@ -296,12 +297,12 @@ func (n *Node) Export(surface3D *charts.Surface3D, key string) {
 }
 
 func (n *Node) ExportBuilding(surface3D *charts.Surface3D) {
-	fmt.Println(n.leaf)
-	fmt.Println(n.Children)
-	fmt.Println(n.Buildings)
+	//fmt.Println(n.leaf)
+	//fmt.Println(n.Children)
+	//fmt.Println(n.Buildings)
 	if n.leaf {
 		for _, building := range n.Buildings {
-			fmt.Println(building)
+			//fmt.Println(building)
 			time.Sleep(time.Millisecond * 10)
 			list := building.Bounds.cuboid("#53fc19")
 			//list := building.Bounds.cuboid(RandColor())

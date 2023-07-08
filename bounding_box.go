@@ -55,9 +55,10 @@ func (b *Vector3d) intersectWithBox(box *Vector3d) bool {
 }
 
 func (b *Vector3d) cuboid(color string) (result []interface{}) {
-	min := []interface{}{b.Position.X, b.Position.Y, b.Position.Z}
-	max := []interface{}{b.Position.X + b.LengthX, b.Position.Y + b.HeightY, b.Position.Z + b.WidthZ}
-
+	//min := []interface{}{b.Position.X, b.Position.Y, b.Position.Z}
+	//max := []interface{}{b.Position.X + b.LengthX, b.Position.Y + b.HeightY, b.Position.Z + b.WidthZ}
+	min := []interface{}{b.Position.X, b.Position.Z, b.Position.Y}
+	max := []interface{}{b.Position.X + b.LengthX, b.Position.Z + b.WidthZ, b.Position.Y + b.HeightY}
 	result = append(result,
 		// Front face
 		[]interface{}{min[0], min[1], max[2]},

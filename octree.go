@@ -42,7 +42,7 @@ func NewOctree(box *Vector3d, maxCap, maxDeep int) *Octree {
 }
 
 // Collision 传入一个建筑，检测当前是否有建筑跟该建筑产生碰撞
-func (t *Octree) Collision(building *Building) bool {
+func (t *Octree) Collision(building *Building) (result bool, collisionBuilding *Building) {
 	return t.Root.collision(building)
 }
 
@@ -95,9 +95,12 @@ func (t *Octree) Export() {
 			Type: "value",
 		}),
 		charts.WithYAxis3DOpts(opts.YAxis3D{
+			Name: "Z",
 			Type: "value",
 		}),
+
 		charts.WithZAxis3DOpts(opts.ZAxis3D{
+			Name: "Y",
 			Type: "value",
 		}),
 		charts.WithGrid3DOpts(opts.Grid3D{
@@ -105,7 +108,17 @@ func (t *Octree) Export() {
 				AutoRotate: true,
 			},
 		}),
+		//charts.WithToolboxOpts(opts.Toolbox{
+		//	Show: true,
+		//}),
+		charts.WithTooltipOpts(opts.Tooltip{
+			Show:      true,
+			Enterable: true,
+			TriggerOn: "click",
+			Formatter: `{a}`,
+		}),
 	)
+
 	t.Root.ExportBuilding(surface3D2)
 
 	page.AddCharts(
