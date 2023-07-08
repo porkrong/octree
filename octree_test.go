@@ -23,10 +23,10 @@ func TestNewOctree(t *testing.T) {
 	}, 2, 4)
 
 	// 随机插入点
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 100; i++ {
 		x := rand.Intn(lengthX)
 		z := rand.Intn(widthZ)
-		y := rand.Intn(heightY)
+		y := 0
 		tree.Root.AddEntity(&Entity{
 			Key:      fmt.Sprintf("%v", i+1),
 			Position: NewPosition(x, y, z),
@@ -36,7 +36,7 @@ func TestNewOctree(t *testing.T) {
 	// 随机插入一个建筑
 
 	for i := 0; i < 1; i++ {
-		for j := 0; j < 100; j++ {
+		for j := 0; j < 10; j++ {
 			xMin := rand.Intn(lengthX)
 			zMin := rand.Intn(widthZ)
 			yMin := (i - 0) * 10

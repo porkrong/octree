@@ -244,7 +244,9 @@ func (n *Node) ExportEntity(surface3D *charts.Surface3D) {
 	if n.leaf {
 		for _, v := range n.Entities {
 			list = append(list, opts.Chart3DData{Value: []interface{}{
-				v.Position.X, v.Position.Y, v.Position.Z},
+				//v.Position.X, v.Position.Y, v.Position.Z},
+				// 为了视觉效果，y轴跟z轴呼唤
+				v.Position.X, v.Position.Z, v.Position.Y},
 				ItemStyle: &opts.ItemStyle{
 					// 实体的点为黑色
 					Color: "#000",

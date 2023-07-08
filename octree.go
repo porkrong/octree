@@ -64,18 +64,8 @@ func (t *Octree) Export() {
 	}
 	page := components.NewPage()
 
-	surface3D1 := charts.NewSurface3D()
-	surface3D1.SetGlobalOptions(
-		charts.WithTitleOpts(opts.Title{
-			Title: "",
-		}),
-	)
-
-	//t.Root.Export(surface3D, "root")
-	t.Root.ExportEntity(surface3D1)
-
-	surface3D2 := charts.NewSurface3D()
-	surface3D2.SetGlobalOptions(
+	surface3D := charts.NewSurface3D()
+	surface3D.SetGlobalOptions(
 		charts.WithTitleOpts(opts.Title{
 			Title: "",
 		}),
@@ -86,8 +76,8 @@ func (t *Octree) Export() {
 			Max:       1,
 			InRange: &opts.VisualMapInRange{
 				Color: []string{
-					"#313695",
-					"#4575b4",
+					//"#313695",
+					//"#4575b4",
 				},
 			},
 		}),
@@ -119,11 +109,11 @@ func (t *Octree) Export() {
 		}),
 	)
 
-	t.Root.ExportBuilding(surface3D2)
-
+	t.Root.ExportBuilding(surface3D)
+	t.Root.ExportEntity(surface3D)
 	page.AddCharts(
 		//surface3D1,
-		surface3D2,
+		surface3D,
 	)
 	f, err := os.Create("3d_grid.html")
 	if err != nil {
